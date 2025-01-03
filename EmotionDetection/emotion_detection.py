@@ -22,6 +22,16 @@ def emotion_detector(text_to_analyze):
     try:
         # Send the POST request to IBM Watson
         response = requests.post(EMOTION_PREDICTION_URL, json=json_body, headers = HEADERS)
+        if response.status_code == 400:
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+            }
+        
         response.raise_for_status()
         response_json = response.json()
         
