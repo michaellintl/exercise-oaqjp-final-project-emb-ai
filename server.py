@@ -10,10 +10,6 @@ def detect_emotion_page():
 @app.route("/emotionDetector")
 def detect_emotion():
     text_to_analyze = request.args.get("textToAnalyze")
-    
-    if not text_to_analyze:
-        return {"message": "Invalid input parameter"}, 400
-
     detection_result = emotion_detector(text_to_analyze)
 
     anger = detection_result.get('anger')
@@ -23,12 +19,13 @@ def detect_emotion():
     sadness = detection_result.get('sadness')
     dominant_emotion = detection_result.get('dominant_emotion')
 
-    response_message = f"For the given statement, the system response is \
+    if dominant_emotion is None:
+        return "<strong>Invalid text! Please try again!</strong>"
+
+    return f"For the given statement, the system response is \
         'anger': {anger}, 'disgust': {disgust}, 'fear': {fear}, \
         'joy': {joy} and 'sadness': {sadness}. The dominant emotion is \
         <strong>{dominant_emotion}</strong>."
-
-    return response_message
 
 if __name__ == "__main__":
     app.run(debug=True)
